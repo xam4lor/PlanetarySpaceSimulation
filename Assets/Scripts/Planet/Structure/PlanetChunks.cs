@@ -8,14 +8,11 @@ public class PlanetChunks {
 
 	private Vector3 translation;
 	private float scale;
-	private Planet planet;
-
-	private float lastPlayerDistance;
+	public Planet planet;
 
 	public PlanetChunks(Planet planet, Vector3 translation, string localUp, GameObject parentGo)  {
 		this.planet = planet;
 		this.translation = translation;
-		this.lastPlayerDistance = 10e10f;
 
 		int id = -1;
 		switch(localUp) {
@@ -70,6 +67,22 @@ public class PlanetChunks {
             ch.backPropagate();
         } */
 	}
+
+	public void divideFromCenter(Vector3 center) {
+        QuadTree.RecursiveTree root = new QuadTree.RecursiveTree(true);
+		root = this.mainChunk.getDividedChunksFromCenter(center, ref root);
+        
+
+		// Add to thread?
+		this.mainChunk.killUnreferencedChunks(root);
+    }
+
+	public void destroyGameObject(GameObject go) {
+		this.planet.destroyGameObject(go);
+	}
+
+
+
 
 	public QuadTree.Chunk getChunkWithName(string chunkName) {
 		return this.mainChunk.getChunkWithName(chunkName.Substring(6));

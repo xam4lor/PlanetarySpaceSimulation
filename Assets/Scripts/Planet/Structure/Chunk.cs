@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace QuadTree {
 	public class Chunk {
-        public int depth;
+		public int depth;
 
-        private Chunk parentChunk;
-        
+		private Chunk parentChunk;
+		
 		private GameObject gameObject;
 		private MeshFilter meshFilter;
 		private PlanetChunks handler;
@@ -77,40 +77,40 @@ namespace QuadTree {
 		private Mesh constructMesh() {
 			Mesh mesh = new Mesh();
 			float s = this.bounds.dim;
-            float globalS = handler.getScale();
-            int density = Planet.chunkDensity;
+			float globalS = handler.getScale();
+			int density = Planet.chunkDensity;
 
-            Vector3 trans = handler.getTranslation();
-            Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
+			Vector3 trans = handler.getTranslation();
+			Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
 
 
-            Vector3[] vertices = new Vector3[(density + 1) * (density + 1)];
+			Vector3[] vertices = new Vector3[(density + 1) * (density + 1)];
 			Vector3[] normals  = new Vector3[(density + 1) * (density + 1)];
-            int[] triangles    = new int[6 * (density-1)*(density-1)];
+			int[] triangles    = new int[6 * (density-1)*(density-1)];
 
 
 			int indexTr = 0;
 			for (int j = 0; j < density; j++) {
-                for (int i = 0; i < density; i++) {
-                    float x = this.bounds.pos.x + s / (density-1) * i;
-                    float y = this.bounds.pos.y + s / (density- 1) * j;
+				for (int i = 0; i < density; i++) {
+					float x = this.bounds.pos.x + s / (density - 1) * i;
+					float y = this.bounds.pos.y + s / (density - 1) * j;
 
 					vertices[i + j * density] = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
-                    normals [i + j * density] = vertices[i + j * density].normalized;
+					normals [i + j * density] = vertices[i + j * density].normalized;
 
 					if (i != density - 1 && j != density - 1) {
-                        triangles[indexTr + 0] = i + (j + 1) * density;
-                        triangles[indexTr + 1] = i + j * density + 1;
+						triangles[indexTr + 0] = i + (j + 1) * density;
+						triangles[indexTr + 1] = i + j * density + 1;
 						triangles[indexTr + 2] = i + j * density;
-                        indexTr += 3;
+						indexTr += 3;
 					}
-                    if (i != 0 && j != density - 1) {
-                        triangles[indexTr + 0] = i + j * density;
-                        triangles[indexTr + 1] = i - 1 + (j + 1) * density;
-                        triangles[indexTr + 2] = i + (j + 1) * density;
-                        indexTr += 3;
+					if (i != 0 && j != density - 1) {
+						triangles[indexTr + 0] = i + j * density;
+						triangles[indexTr + 1] = i - 1 + (j + 1) * density;
+						triangles[indexTr + 2] = i + (j + 1) * density;
+						indexTr += 3;
 					}
-                }
+				}
 			}
 
 			// Generate Mesh
@@ -122,20 +122,71 @@ namespace QuadTree {
 			return mesh;
 		}
 
-        public void backPropagate(Chunk saved) {
-			/* this.killChildrenWithout();
-			this.parentChunk.backPropagate(); */
+/* 		public void quadDivide(float playerDistance) {
+			int[] depthsTable = new int[] { 10, 100, 1000, 10000, 100000, 1000000 };
+			int computedTargetDepth = 15; // max value
+
+			for (int i = 0; i < depthsTable.Length; i++) {
+				if (playerDistance < depthsTable[i]) {
+					break;
+				}
+				computedTargetDepth -= 1;
+			}
+
+			if (this.depth < computedTargetDepth) {
+				this.subdivide();
+
+				for (int i = 0; i < this.cells.Length; i++) {
+					if (this.cells[i] != null) {
+						this.cells[i].quadDivide(playerDistance);
+					}
+				}
+			}
+			else if (this.depth > computedTargetDepth) {
+				this.killChildren();
+			}
+		} */
+
+
+		public RecursiveTree getDividedChunksFromCenter(Vector3 playerCenterPosition, ref RecursiveTree parent) {
+            float[] threshold = this.handler.planet.threshold;
+
+            float globalS = handler.getScale();
+            Vector3 trans = handler.getTranslation();
+            Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
+
+            float x = this.bounds.pos.x + this.bounds.dim / 2;
+            float y = this.bounds.pos.y + this.bounds.dim / 2;
+
+            Vector3 pos = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
+
+			// Test distance btw this chunk and projected player point
+            float distancePlayerCenter = Vector3.Distance(playerCenterPosition, pos);
+            if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.planet.scale) { // If < threshold
+				// Divide 
+                parent.divide();
+				this.subdivide();
+
+				for (int i = 0; i < this.cells.Length; i++) {
+                    parent.childrens[i] = this.cells[i].getDividedChunksFromCenter(playerCenterPosition, ref parent.childrens[i]);
+				}
+            }
+			return parent;
 		}
 
-		public void shouldDivide(float playerDistance) {
-            int[] depthsTable = new int[] { 10, 100, 1000, 10000, 100000, 1000000 };
-            int computedTargetDepth = 15; // max value
-
-            for (int i = 0; i < depthsTable.Length; i++) {
-                if (playerDistance < depthsTable[i]) {
-                    break;
-                }
-                computedTargetDepth -= 1;
+		public void killUnreferencedChunks(RecursiveTree parent) {
+			if (parent.hasChildren) {
+                for (int i = 0; i < this.cells.Length; i++) {
+                    this.cells[i].killUnreferencedChunks(parent.childrens[i]);
+				}
+			}
+			else if (this.subdivided && !parent.hasChildren) {
+				for (int i = 0; i < this.cells.Length; i++) {
+                    this.cells[i].killChildren();
+				}
+                this.subdivided = false;
+                this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                this.gameObject.GetComponent<BoxCollider>().enabled = true;
 			}
 		}
 
@@ -143,20 +194,28 @@ namespace QuadTree {
 
 
 
-        public void kill() {
+		public void kill() {
             // KILLS HIMSELF
-        }
+			this.subdivided = false;
+            this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
-        public void killChildren() {
-            for (int i = 0; i < this.cells.Length; i++) {
-                this.cells[i].killChildren();
-            }
-			
-        }
+			this.handler.destroyGameObject(this.gameObject);
+		}
+
+		public void killChildren() {
+			if (this.subdivided) {
+                for (int i = 0; i < this.cells.Length; i++) {
+                    this.cells[i].killChildren();
+                }
+			}
+			this.kill();
+		}
 
 
 		public void drawDebug() {
-			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y + this.bounds.dim));
+            /*
+ 			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y + this.bounds.dim));
 			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y));
 			Gizmos.DrawLine(new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y + this.bounds.dim));
 			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y + this.bounds.dim), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y + this.bounds.dim));
@@ -166,6 +225,18 @@ namespace QuadTree {
 					this.cells[i].drawDebug();
 				}
 			}
+			*/
+
+
+            float globalS = handler.getScale();
+            Vector3 trans = handler.getTranslation();
+            Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
+
+            float x = this.bounds.pos.x + this.bounds.dim / 2;
+            float y = this.bounds.pos.y + this.bounds.dim / 2;
+
+            Vector3 pos = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
+			Gizmos.DrawSphere(pos, 1);
 		}
 
 		public Chunk getChunkWithName(string name) {
@@ -193,6 +264,23 @@ namespace QuadTree {
 		}
 	}
 
+
+	public struct RecursiveTree {
+		public bool hasChildren;
+		public RecursiveTree[] childrens;
+
+		public RecursiveTree(bool hasChildren) {
+			this.hasChildren = hasChildren;
+			this.childrens = new RecursiveTree[4];
+		}
+
+		public void divide() {
+			this.hasChildren = true;
+			for (int i = 0; i < childrens.Length; i++) {
+                childrens[i] = new RecursiveTree(false);
+			}
+		}
+	}
 
 	public struct BoundingBox {
 		public Vector3 pos;

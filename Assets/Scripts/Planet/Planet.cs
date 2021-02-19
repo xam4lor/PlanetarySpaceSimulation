@@ -1,10 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class Planet : MonoBehaviour {
 	public int scale = 10;
     public static int chunkDensity = 10;
+
+	public float[] threshold = new float[] {
+		2, // threshold 0
+		1.5f, // threshold 1
+		1, // threshold 2
+		0.7f, // threshold 3
+		0.5f,
+		0.1f,
+		0
+	};
+
+
+	public static int destroyIterationMaxCount = 10;
 
 	[SerializeField, HideInInspector]
 	private GameObject chunksContainer;
@@ -13,10 +27,13 @@ public class Planet : MonoBehaviour {
 	private PlanetChunks[] planetChunks;
 	private PlayerLastStats lastPlayerStats;
 
+	private Stack<GameObject> destroyGORef;
+
     private int lastScale = 10;
 
 
 	private void OnEnable() {
+		this.destroyGORef = new Stack<GameObject>();
 		this.planetChunks = new PlanetChunks[6];
 		this.lastPlayerStats = new PlayerLastStats(Vector3.one, 0f, 0, "null");
 
@@ -54,16 +71,32 @@ public class Planet : MonoBehaviour {
 	}
 
 
-	// Generate mesh every second
-	private IEnumerator PlanetGenerationLoop() {
-		while (true) {
-			if (!this.lastPlayerStats.chunkName.Equals("null")) {
-				this.planetChunks[this.lastPlayerStats.chunkID]
-					.playerSeeChunks(this.lastPlayerStats.pos, this.lastPlayerStats.distance, this.lastPlayerStats.chunkName);
-			}
-			yield return new WaitForSeconds(0.1f);
-		}
+    // Generate mesh every second
+    private IEnumerator PlanetGenerationLoop() {
+        while (true) {
+            this.handleChunksAsync();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+	private void handleChunksAsync() {
+        // Divide chunks
+        for (int i = 0; i < planetChunks.Length; i++) {
+            planetChunks[i].divideFromCenter(this.lastPlayerStats.pos);
+        }
+        // Destroy chunks
+        for (int i = 0; i < destroyIterationMaxCount; i++) {
+			if (this.destroyGORef.Count == 0)
+				break;
+            Destroy(this.destroyGORef.Pop());
+        }
 	}
+
+
+	public void destroyGameObject(GameObject go) {
+		this.destroyGORef.Push(go);
+	}
+
 
 
 	public float getScale() {
