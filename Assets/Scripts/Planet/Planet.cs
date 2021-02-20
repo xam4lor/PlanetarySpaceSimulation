@@ -4,21 +4,21 @@ using UnityEngine;
 using System.Threading;
 
 public class Planet : MonoBehaviour {
-	public int scale = 10;
-    public static int chunkDensity = 10;
+	public int planetScale = 10;
+    public int chunkDensity = 10;
 
 	public float[] threshold = new float[] {
-		2, // threshold 0
+		2,    // threshold 0
 		1.5f, // threshold 1
-		1, // threshold 2
+		1,    // threshold 2
 		0.7f, // threshold 3
 		0.5f,
 		0.1f,
 		0
 	};
 
+	public int destroyIterationMaxCount = 10;
 
-	public static int destroyIterationMaxCount = 10;
 
 	[SerializeField, HideInInspector]
 	private GameObject chunksContainer;
@@ -43,8 +43,8 @@ public class Planet : MonoBehaviour {
 	}
 
 	private void Update() {
-        if (lastScale != scale) {
-			lastScale = scale;
+        if (lastScale != planetScale) {
+			lastScale = planetScale;
 			this.generate();
 		}
 	}
@@ -70,6 +70,11 @@ public class Planet : MonoBehaviour {
 		planetChunks[5] = new PlanetChunks(this, gameObject.transform.position, "downZ", chunksContainer);
 	}
 
+	public float getAltitudeAt(Vector3 pos) {
+		float scl = 10;
+		return Mathf.PerlinNoise(pos.x / scl, pos.z / scl) / 15f;
+	}
+
 
     // Generate mesh every second
     private IEnumerator PlanetGenerationLoop() {
@@ -82,7 +87,7 @@ public class Planet : MonoBehaviour {
 	private void handleChunksAsync() {
         // Divide chunks
         for (int i = 0; i < planetChunks.Length; i++) {
-            planetChunks[i].divideFromCenter(this.lastPlayerStats.pos);
+            planetChunks[i].divideFromCenter(this.lastPlayerStats.pos, this.lastPlayerStats.distance);
         }
         // Destroy chunks
         for (int i = 0; i < destroyIterationMaxCount; i++) {
@@ -99,8 +104,10 @@ public class Planet : MonoBehaviour {
 
 
 
+
+
 	public float getScale() {
-		return this.scale;
+		return this.planetScale;
 	}
 
 

@@ -49,31 +49,10 @@ public class PlanetChunks {
 		this.mainChunk.subdivide();
 	}
 
-	public void playerSeeChunks(Vector3 pos, float distance, string chunkName) {
-		// from [0] to [1], max computedTargetDepth
-		int[] depthsTable = new int[]{10, 100, 1000, 10000, 100000, 1000000};
-		int computedTargetDepth = 15; // max value
-
-		for (int i = 0; i < depthsTable.Length; i++) {
-            if (distance < depthsTable[i]) {
-				break;
-            }
-            computedTargetDepth -= 1;
-		}
-
-/*         QuadTree.Chunk ch = this.getChunkWithName(chunkName);
-        if (ch.depth <= computedTargetDepth) {
-            ch.subdivide();
-            ch.backPropagate();
-        } */
-	}
-
-	public void divideFromCenter(Vector3 center) {
+	public void divideFromCenter(Vector3 center, float distanceFromCollision) {
         QuadTree.RecursiveTree root = new QuadTree.RecursiveTree(true);
-		root = this.mainChunk.getDividedChunksFromCenter(center, ref root);
+		root = this.mainChunk.getDividedChunksFromCenter(center, distanceFromCollision, ref root);
         
-
-		// Add to thread?
 		this.mainChunk.killUnreferencedChunks(root);
     }
 

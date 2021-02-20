@@ -50,7 +50,7 @@ namespace QuadTree {
 
 			// Clear Mesh
 			this.gameObject.GetComponent<MeshRenderer>().enabled = false;
-			this.gameObject.GetComponent<BoxCollider>().enabled = false;
+			this.gameObject.GetComponent<MeshCollider>().enabled = false;
 
 			this.subdivided = true;
 		}
@@ -62,13 +62,17 @@ namespace QuadTree {
 			chunkGo.transform.position = new Vector3(0, 0, 0);
 			chunkGo.tag = "Chunk";
 
+			Mesh mesh = this.constructMesh();
+
 			// Mesh
 			chunkGo.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
 			MeshFilter meshFilter = chunkGo.AddComponent<MeshFilter>();
-			meshFilter.sharedMesh = this.constructMesh();
+			meshFilter.sharedMesh = mesh;
 
-			// Colliders
-			chunkGo.AddComponent<BoxCollider>();
+            // Colliders
+            MeshCollider meshCollider = chunkGo.AddComponent<MeshCollider>();
+            meshCollider.convex = true;
+            meshCollider.sharedMesh = mesh;
 
 			this.gameObject = chunkGo;
 			this.meshFilter = meshFilter;
@@ -78,7 +82,7 @@ namespace QuadTree {
 			Mesh mesh = new Mesh();
 			float s = this.bounds.dim;
 			float globalS = handler.getScale();
-			int density = Planet.chunkDensity;
+			int density = handler.planet.chunkDensity;
 
 			Vector3 trans = handler.getTranslation();
 			Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
@@ -86,7 +90,7 @@ namespace QuadTree {
 
 			Vector3[] vertices = new Vector3[(density + 1) * (density + 1)];
 			Vector3[] normals  = new Vector3[(density + 1) * (density + 1)];
-			int[] triangles    = new int[6 * (density-1)*(density-1)];
+			int[] triangles    = new int[6 * (density - 1) * (density - 1)];
 
 
 			int indexTr = 0;
@@ -95,7 +99,8 @@ namespace QuadTree {
 					float x = this.bounds.pos.x + s / (density - 1) * i;
 					float y = this.bounds.pos.y + s / (density - 1) * j;
 
-					vertices[i + j * density] = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
+					Vector3 sphereCoordPosition = this.handler.localRotation * (new Vector3(x, 0, y) - off).normalized * globalS;
+					vertices[i + j * density] = sphereCoordPosition * (1 + this.handler.planet.getAltitudeAt(sphereCoordPosition)) + trans;
 					normals [i + j * density] = vertices[i + j * density].normalized;
 
 					if (i != density - 1 && j != density - 1) {
@@ -122,33 +127,8 @@ namespace QuadTree {
 			return mesh;
 		}
 
-/* 		public void quadDivide(float playerDistance) {
-			int[] depthsTable = new int[] { 10, 100, 1000, 10000, 100000, 1000000 };
-			int computedTargetDepth = 15; // max value
 
-			for (int i = 0; i < depthsTable.Length; i++) {
-				if (playerDistance < depthsTable[i]) {
-					break;
-				}
-				computedTargetDepth -= 1;
-			}
-
-			if (this.depth < computedTargetDepth) {
-				this.subdivide();
-
-				for (int i = 0; i < this.cells.Length; i++) {
-					if (this.cells[i] != null) {
-						this.cells[i].quadDivide(playerDistance);
-					}
-				}
-			}
-			else if (this.depth > computedTargetDepth) {
-				this.killChildren();
-			}
-		} */
-
-
-		public RecursiveTree getDividedChunksFromCenter(Vector3 playerCenterPosition, ref RecursiveTree parent) {
+		public RecursiveTree getDividedChunksFromCenter(Vector3 playerCenterPosition, float distanceFromCollision, ref RecursiveTree parent) {
             float[] threshold = this.handler.planet.threshold;
 
             float globalS = handler.getScale();
@@ -161,14 +141,14 @@ namespace QuadTree {
             Vector3 pos = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
 
 			// Test distance btw this chunk and projected player point
-            float distancePlayerCenter = Vector3.Distance(playerCenterPosition, pos);
-            if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.planet.scale) { // If < threshold
+            float distancePlayerCenter = Vector3.Distance(playerCenterPosition / Mathf.Max(distanceFromCollision, 1), pos);
+            if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.getScale()) { // If < threshold
 				// Divide 
                 parent.divide();
 				this.subdivide();
 
 				for (int i = 0; i < this.cells.Length; i++) {
-                    parent.childrens[i] = this.cells[i].getDividedChunksFromCenter(playerCenterPosition, ref parent.childrens[i]);
+                    parent.childrens[i] = this.cells[i].getDividedChunksFromCenter(playerCenterPosition, distanceFromCollision, ref parent.childrens[i]);
 				}
             }
 			return parent;
@@ -186,7 +166,7 @@ namespace QuadTree {
 				}
                 this.subdivided = false;
                 this.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                this.gameObject.GetComponent<BoxCollider>().enabled = true;
+                this.gameObject.GetComponent<MeshCollider>().enabled = true;
 			}
 		}
 
@@ -198,7 +178,7 @@ namespace QuadTree {
             // KILLS HIMSELF
 			this.subdivided = false;
             this.gameObject.GetComponent<MeshRenderer>().enabled = false;
-            this.gameObject.GetComponent<BoxCollider>().enabled = false;
+            this.gameObject.GetComponent<MeshCollider>().enabled = false;
 
 			this.handler.destroyGameObject(this.gameObject);
 		}
@@ -214,20 +194,6 @@ namespace QuadTree {
 
 
 		public void drawDebug() {
-            /*
- 			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y + this.bounds.dim));
-			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y));
-			Gizmos.DrawLine(new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y + this.bounds.dim));
-			Gizmos.DrawLine(new Vector3(this.bounds.pos.x, 0, this.bounds.pos.y + this.bounds.dim), new Vector3(this.bounds.pos.x + this.bounds.dim, 0, this.bounds.pos.y + this.bounds.dim));
-
-			for (int i = 0; i < this.cells.Length; i++) {
-				if (this.cells[i] != null) {
-					this.cells[i].drawDebug();
-				}
-			}
-			*/
-
-
             float globalS = handler.getScale();
             Vector3 trans = handler.getTranslation();
             Vector3 off = new Vector3(globalS / 2, -globalS / 2, globalS / 2);
