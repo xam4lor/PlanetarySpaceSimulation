@@ -128,7 +128,7 @@ namespace QuadTree {
 		}
 
 
-		public RecursiveTree getDividedChunksFromCenter(Vector3 playerCenterPosition, float distanceFromCollision, ref RecursiveTree parent) {
+		public RecursiveTree getDividedChunksFromCenter(Vector3 playerPos, Vector3 collisionPos, float collisionDist, ref RecursiveTree parent) {
             float[] threshold = this.handler.planet.threshold;
 
             float globalS = handler.getScale();
@@ -140,15 +140,15 @@ namespace QuadTree {
 
             Vector3 pos = this.handler.localRotation * ((new Vector3(x, 0, y) - off).normalized * globalS) + trans;
 
-			// Test distance btw this chunk and projected player point
-            float distancePlayerCenter = Vector3.Distance(playerCenterPosition / Mathf.Max(distanceFromCollision, 1), pos);
-            if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.getScale()) { // If < threshold
+            // Test distance btw this chunk and projected player point
+            float distancePlayerCenter = Vector3.Distance(playerPos, pos);
+            if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.getScale()) { // If < threshold */
 				// Divide 
                 parent.divide();
 				this.subdivide();
 
 				for (int i = 0; i < this.cells.Length; i++) {
-                    parent.childrens[i] = this.cells[i].getDividedChunksFromCenter(playerCenterPosition, distanceFromCollision, ref parent.childrens[i]);
+                    parent.childrens[i] = this.cells[i].getDividedChunksFromCenter(playerPos, collisionPos, collisionDist, ref parent.childrens[i]);
 				}
             }
 			return parent;

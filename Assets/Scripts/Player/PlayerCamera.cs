@@ -15,7 +15,7 @@ public class PlayerCamera : MonoBehaviour {
 				string chunkName = hitInfo.collider.name;
                 int chunkID = int.Parse(chunkName.Substring(0, 1));
 				
-                planetChunks.GetComponent<Planet>().SendMessage("onPlayerSeeChunk", new object[4]{ collisionPoint, hitInfo.distance, chunkID, chunkName });
+                planetChunks.GetComponent<Planet>().SendMessage("onPlayerSeeChunk", new object[]{ transform.position, collisionPoint, hitInfo.distance, chunkID, chunkName });
                 Debug.DrawLine(ray.origin, hitInfo.point, Color.green);
 			}
         }

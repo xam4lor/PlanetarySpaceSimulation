@@ -49,9 +49,9 @@ public class PlanetChunks {
 		this.mainChunk.subdivide();
 	}
 
-	public void divideFromCenter(Vector3 center, float distanceFromCollision) {
+	public void divideFromCenter(Vector3 playerPosition, Vector3 collisionCenter, float distanceFromCollision) {
         QuadTree.RecursiveTree root = new QuadTree.RecursiveTree(true);
-		root = this.mainChunk.getDividedChunksFromCenter(center, distanceFromCollision, ref root);
+		root = this.mainChunk.getDividedChunksFromCenter(playerPosition, collisionCenter, distanceFromCollision, ref root);
         
 		this.mainChunk.killUnreferencedChunks(root);
     }

@@ -4,9 +4,12 @@ using UnityEngine;
 using System.Threading;
 
 public class Planet : MonoBehaviour {
+    [Header("Planet settings")]
+	public float mass = 10e8f;
 	public int planetScale = 10;
     public int chunkDensity = 10;
 
+    [Header("Planet chunks")]
 	public float[] threshold = new float[] {
 		2,    // threshold 0
 		1.5f, // threshold 1
@@ -16,7 +19,6 @@ public class Planet : MonoBehaviour {
 		0.1f,
 		0
 	};
-
 	public int destroyIterationMaxCount = 10;
 
 
@@ -35,7 +37,7 @@ public class Planet : MonoBehaviour {
 	private void OnEnable() {
 		this.destroyGORef = new Stack<GameObject>();
 		this.planetChunks = new PlanetChunks[6];
-		this.lastPlayerStats = new PlayerLastStats(Vector3.one, 0f, 0, "null");
+		this.lastPlayerStats = new PlayerLastStats(Vector3.one, Vector3.one, 0f, 0, "null");
 
 		this.generate();
 
@@ -87,7 +89,7 @@ public class Planet : MonoBehaviour {
 	private void handleChunksAsync() {
         // Divide chunks
         for (int i = 0; i < planetChunks.Length; i++) {
-            planetChunks[i].divideFromCenter(this.lastPlayerStats.pos, this.lastPlayerStats.distance);
+            planetChunks[i].divideFromCenter(this.lastPlayerStats.playerPos, this.lastPlayerStats.collisionPos, this.lastPlayerStats.distance);
         }
         // Destroy chunks
         for (int i = 0; i < destroyIterationMaxCount; i++) {
@@ -112,19 +114,21 @@ public class Planet : MonoBehaviour {
 
 
 	struct PlayerLastStats {
-		public Vector3 pos;
+		public Vector3 playerPos;
+        public Vector3 collisionPos;
 		public float distance;
 		public int chunkID;
 		public string chunkName;
 
-		public PlayerLastStats(Vector3 pos, float distance, int chunkID, string chunkName) {
-			this.pos = pos;
+		public PlayerLastStats(Vector3 playerPos, Vector3 collisionPos, float distance, int chunkID, string chunkName) {
+			this.playerPos = playerPos;
+            this.collisionPos = collisionPos;
 			this.distance = distance;
 			this.chunkID  = chunkID;
 			this.chunkName = chunkName;
 		}
 	};
 	private void onPlayerSeeChunk(object[] obj) {
-		this.lastPlayerStats = new PlayerLastStats((Vector3)obj[0], (float)obj[1], (int)obj[2], (string)obj[3]);
+		this.lastPlayerStats = new PlayerLastStats((Vector3)obj[0], (Vector3)obj[1], (float)obj[2], (int)obj[3], (string)obj[4]);
 	}
 }
