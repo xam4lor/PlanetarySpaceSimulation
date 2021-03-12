@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
 
 public class Planet : MonoBehaviour {
     [Header("Planet settings")]
 	public float mass = 10e8f;
 	public int planetScale = 10;
     public int chunkDensity = 10;
+	public float terrainHeight = 10;
+
 
     [Header("Planet chunks")]
 	public float[] threshold = new float[] {
@@ -21,23 +22,30 @@ public class Planet : MonoBehaviour {
 	};
 	public int destroyIterationMaxCount = 10;
 
+    [Header("Noise settings")]
+	public int noiseSetting;
+
 
 	[SerializeField, HideInInspector]
 	private GameObject chunksContainer;
 	
     [SerializeField, HideInInspector]
 	private PlanetChunks[] planetChunks;
+    private Stack<GameObject> destroyGORef;
+
+
 	private PlayerLastStats lastPlayerStats;
-
-	private Stack<GameObject> destroyGORef;
-
     private int lastScale = 10;
 
 
+	private TerrainGenerator terrainGenerator;
+
+
 	private void OnEnable() {
-		this.destroyGORef = new Stack<GameObject>();
-		this.planetChunks = new PlanetChunks[6];
-		this.lastPlayerStats = new PlayerLastStats(Vector3.one, Vector3.one, 0f, 0, "null");
+		this.terrainGenerator = new TerrainGenerator(noiseSetting);
+		this.destroyGORef     = new Stack<GameObject>();
+		this.planetChunks     = new PlanetChunks[6];
+		this.lastPlayerStats  = new PlayerLastStats(Vector3.one, Vector3.one, 0f, 0, "null");
 
 		this.generate();
 
@@ -54,7 +62,7 @@ public class Planet : MonoBehaviour {
 
 
 
-	private void generate() {
+	public void generate() {
 		// Initialize planet chunks
 		foreach (Transform child in transform) {
 			GameObject.Destroy(child.gameObject);
@@ -73,9 +81,15 @@ public class Planet : MonoBehaviour {
 	}
 
 	public float getAltitudeAt(Vector3 pos) {
-		float scl = 10;
-		return Mathf.PerlinNoise(pos.x / scl, pos.z / scl) / 15f;
+		return this.terrainGenerator.getAltitudeAt(pos);
 	}
+
+	public Color getColorAtAltitude(float z) {
+        return Color.Lerp(new Color(0.3f, 0.5f, 0.3f), new Color(0.9f, 0.9f, 0.95f), z * 10f / terrainHeight);
+	}
+
+
+
 
 
     // Generate mesh every second

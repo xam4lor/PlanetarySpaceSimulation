@@ -61,6 +61,11 @@ public class PlanetChunks {
 	}
 
 
+	public Color getColorAtAltitude(float z) {
+        return planet.getColorAtAltitude(z);
+	}
+
+
 
 
 	public QuadTree.Chunk getChunkWithName(string chunkName) {
