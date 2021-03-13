@@ -7,7 +7,6 @@ public class Planet : MonoBehaviour {
 	public float mass = 10e8f;
 	public int planetScale = 10;
     public int chunkDensity = 10;
-	public float terrainHeight = 10;
 
 
     [Header("Planet chunks")]
@@ -22,8 +21,10 @@ public class Planet : MonoBehaviour {
 	};
 	public int destroyIterationMaxCount = 10;
 
-    [Header("Noise settings")]
-	public int noiseSetting;
+	[Header("Terrain Configuration")]
+    public float terrainHeight = 10;
+    public NoiseSettings[] noiseSettings;
+    public TerrainColorsSettings[] terrainColorsSettings;
 
 
 	[SerializeField, HideInInspector]
@@ -41,8 +42,9 @@ public class Planet : MonoBehaviour {
 	private TerrainGenerator terrainGenerator;
 
 
+
 	private void OnEnable() {
-		this.terrainGenerator = new TerrainGenerator(noiseSetting);
+		this.terrainGenerator = new TerrainGenerator(noiseSettings, terrainColorsSettings, this);
 		this.destroyGORef     = new Stack<GameObject>();
 		this.planetChunks     = new PlanetChunks[6];
 		this.lastPlayerStats  = new PlayerLastStats(Vector3.one, Vector3.one, 0f, 0, "null");
@@ -57,12 +59,17 @@ public class Planet : MonoBehaviour {
 			lastScale = planetScale;
 			this.generate();
 		}
+
+		this.transform.RotateAround(this.transform.position, Vector3.back, 20f * Time.deltaTime);
 	}
 
 
 
 
 	public void generate() {
+		// Initialize terrain generation
+		this.terrainGenerator.initialize();
+
 		// Initialize planet chunks
 		foreach (Transform child in transform) {
 			GameObject.Destroy(child.gameObject);
@@ -85,7 +92,7 @@ public class Planet : MonoBehaviour {
 	}
 
 	public Color getColorAtAltitude(float z) {
-        return Color.Lerp(new Color(0.3f, 0.5f, 0.3f), new Color(0.9f, 0.9f, 0.95f), z * 10f / terrainHeight);
+        return this.terrainGenerator.getColorAtAltitude(z);
 	}
 
 

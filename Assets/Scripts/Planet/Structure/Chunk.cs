@@ -202,12 +202,12 @@ namespace QuadTree {
 					float y = this.bounds.pos.y + s / (density - 1) * j;
                     float z = 0;
 
-					Vector3 sphereCoordPosition = this.handler.localRotation * (new Vector3(x, z, y) - off).normalized * globalS;
+					Vector3 sphereUnitPosition = this.handler.localRotation * (new Vector3(x, z, y) - off).normalized;
 
 					// Default
-                    z = this.handler.planet.getAltitudeAt(sphereCoordPosition / globalS);
+                    z = this.handler.planet.getAltitudeAt(sphereUnitPosition);
 
-					vertices[i + j * density] = sphereCoordPosition * (1 + z) + trans;
+					vertices[i + j * density] = sphereUnitPosition * (this.handler.planet.planetScale + z) + trans;
 					normals [i + j * density] = vertices[i + j * density].normalized;
 
 					if (i != density - 1 && j != density - 1) {
