@@ -7,9 +7,12 @@ public class Planet : MonoBehaviour {
 	public float mass = 10e8f;
 	public int planetScale = 10;
     public int chunkDensity = 10;
+	public Vector3 rotationAxis = new Vector3(2f, 1.3f, 5.1f);
+	public float rotationPulsation = 10f;
 
 
     [Header("Planet chunks")]
+	public bool useLOD = false;
 	public float[] threshold = new float[] {
 		2,    // threshold 0
 		1.5f, // threshold 1
@@ -19,12 +22,16 @@ public class Planet : MonoBehaviour {
 		0.1f,
 		0
 	};
+	public int chunkTargetLevel = 3;
 	public int destroyIterationMaxCount = 10;
+
+
 
 	[Header("Terrain Configuration")]
     public float terrainHeight = 10;
     public NoiseSettings[] noiseSettings;
-    public TerrainColorsSettings[] terrainColorsSettings;
+    private TerrainColorsSettings[] terrainColorsSettings;
+	public Gradient terrainGradient;
 
 
 	[SerializeField, HideInInspector]
@@ -60,7 +67,9 @@ public class Planet : MonoBehaviour {
 			this.generate();
 		}
 
-		this.transform.RotateAround(this.transform.position, Vector3.back, 20f * Time.deltaTime);
+		// Units : km, kg
+
+		this.transform.RotateAround(this.transform.position, rotationAxis, rotationPulsation * Time.deltaTime);
 	}
 
 

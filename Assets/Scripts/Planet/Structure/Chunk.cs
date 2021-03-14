@@ -80,7 +80,7 @@ namespace QuadTree {
 
             // Renderer & Material
             MeshRenderer renderer = chunkGo.AddComponent<MeshRenderer>();
-			Material mat = new Material(Shader.Find("Sprites/Diffuse")); // Shader.Find("Standard")
+			Material mat = new Material(Shader.Find("Shader Graphs/TerrainShader")); // Shader.Find("Standard")
             renderer.sharedMaterial = mat;
 
             // Mesh
@@ -90,7 +90,10 @@ namespace QuadTree {
 
             // Colliders
             MeshCollider meshCollider = chunkGo.AddComponent<MeshCollider>();
-            meshCollider.convex = true;
+			try {
+                meshCollider.convex = true;
+			}
+            catch {}
             meshCollider.sharedMesh = mesh;
 
 			this.gameObject = chunkGo;
@@ -253,8 +256,10 @@ namespace QuadTree {
 
             // Test distance btw this chunk and projected player point
             float distancePlayerCenter = Vector3.Distance(playerPos, pos);
-            if (depth < 4) {
-            /* if (depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.getScale()) { // If < threshold */
+			if (
+				   (this.handler.planet.useLOD && depth < threshold.Length && distancePlayerCenter < threshold[depth] * this.handler.getScale())
+				|| (!this.handler.planet.useLOD && depth < this.handler.planet.chunkTargetLevel)
+			) {
 				// Divide 
                 parent.divide();
 				this.subdivide();
