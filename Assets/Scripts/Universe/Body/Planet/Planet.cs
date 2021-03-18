@@ -2,15 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planet : MonoBehaviour {
-    [Header("Planet settings")]
-	public float mass = 10e8f;
-	public int planetScale = 10;
-    public int chunkDensity = 10;
-	public Vector3 rotationAxis = new Vector3(2f, 1.3f, 5.1f);
-	public float rotationPulsation = 10f;
-
-
+public class Planet : Body {
     [Header("Planet chunks")]
 	public bool useLOD = false;
 	public float[] threshold = new float[] {
@@ -23,12 +15,14 @@ public class Planet : MonoBehaviour {
 		0
 	};
 	public int chunkTargetLevel = 3;
+    public int chunkDensity = 10;
 	public int destroyIterationMaxCount = 10;
 
 
 
 	[Header("Terrain Configuration")]
     public float terrainHeight = 10;
+	public float waterLevel = 5f;
     public NoiseSettings[] noiseSettings;
     private TerrainColorsSettings[] terrainColorsSettings;
 	public Gradient terrainGradient;
@@ -40,36 +34,29 @@ public class Planet : MonoBehaviour {
     [SerializeField, HideInInspector]
 	private PlanetChunks[] planetChunks;
     private Stack<GameObject> destroyGORef;
-
-
-	private PlayerLastStats lastPlayerStats;
-    private int lastScale = 10;
-
-
 	private TerrainGenerator terrainGenerator;
 
 
 
-	private void OnEnable() {
+	new private void OnEnable() {
+		base.OnEnable();
+
 		this.terrainGenerator = new TerrainGenerator(noiseSettings, terrainColorsSettings, this);
 		this.destroyGORef     = new Stack<GameObject>();
 		this.planetChunks     = new PlanetChunks[6];
-		this.lastPlayerStats  = new PlayerLastStats(Vector3.one, Vector3.one, 0f, 0, "null");
 
 		this.generate();
 
 		StartCoroutine(PlanetGenerationLoop());
 	}
 
-	private void Update() {
-        if (lastScale != planetScale) {
-			lastScale = planetScale;
+	new private void Update() {
+        base.Update();
+
+        if (lastScale != bodyScale) {
+			lastScale = bodyScale;
 			this.generate();
 		}
-
-		// Units : km, kg
-
-		this.transform.RotateAround(this.transform.position, rotationAxis, rotationPulsation * Time.deltaTime);
 	}
 
 
@@ -132,33 +119,5 @@ public class Planet : MonoBehaviour {
 
 	public void destroyGameObject(GameObject go) {
 		this.destroyGORef.Push(go);
-	}
-
-
-
-
-
-	public float getScale() {
-		return this.planetScale;
-	}
-
-
-	struct PlayerLastStats {
-		public Vector3 playerPos;
-        public Vector3 collisionPos;
-		public float distance;
-		public int chunkID;
-		public string chunkName;
-
-		public PlayerLastStats(Vector3 playerPos, Vector3 collisionPos, float distance, int chunkID, string chunkName) {
-			this.playerPos = playerPos;
-            this.collisionPos = collisionPos;
-			this.distance = distance;
-			this.chunkID  = chunkID;
-			this.chunkName = chunkName;
-		}
-	};
-	private void onPlayerSeeChunk(object[] obj) {
-		this.lastPlayerStats = new PlayerLastStats((Vector3)obj[0], (Vector3)obj[1], (float)obj[2], (int)obj[3], (string)obj[4]);
 	}
 }

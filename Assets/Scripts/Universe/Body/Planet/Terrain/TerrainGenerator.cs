@@ -28,29 +28,20 @@ public class TerrainGenerator {
         altitudePercent = noiseGenerator.evaluate(unitarySpherePos);
 
         // Computes real altitude from percentage
-        float realAltitude = altitudePercent * this.planet.terrainHeight * this.planet.planetScale / 100;
+        float realAltitude = altitudePercent * this.planet.terrainHeight * this.planet.getScale() / 100;
         if (realAltitude > maxHeight)
             maxHeight = realAltitude;
         if (realAltitude < minHeight)
             minHeight = realAltitude;
+
+        if (altitudePercent <= planet.waterLevel)
+            return planet.waterLevel * this.planet.terrainHeight * this.planet.getScale() / 100;
+
         return realAltitude;
     }
 
     public Color getColorAtAltitude(float altitude) {
         float z = altitude / this.maxHeight;
-
-        /* for (int i = 0; i < terrainColorsSettings.Length - 1; i++) {
-            if (z < terrainColorsSettings[i].limit) {
-                if (z > terrainColorsSettings[i].limit - terrainColorsSettings[i].tolerance * terrainColorsSettings[i].limit)
-                    return Color.Lerp(
-                        terrainColorsSettings[i].color,
-                        terrainColorsSettings[i + 1].color,
-                        (z - terrainColorsSettings[i].limit) / (terrainColorsSettings[i + 1].limit - terrainColorsSettings[i].limit));
-                return terrainColorsSettings[i].color;
-            }
-        } */
-
-        /* return terrainColorsSettings[terrainColorsSettings.Length - 1].color; */
         return planet.terrainGradient.Evaluate(z);
     }
 }

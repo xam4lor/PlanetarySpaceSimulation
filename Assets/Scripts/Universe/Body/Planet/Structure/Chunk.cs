@@ -210,7 +210,7 @@ namespace QuadTree {
 					// Default
                     z = this.handler.planet.getAltitudeAt(sphereUnitPosition);
 
-					vertices[i + j * density] = sphereUnitPosition * (this.handler.planet.planetScale + z) + trans;
+					vertices[i + j * density] = sphereUnitPosition * (this.handler.planet.getScale() + z) + trans;
 					normals [i + j * density] = vertices[i + j * density].normalized;
 
 					if (i != density - 1 && j != density - 1) {

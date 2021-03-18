@@ -56,7 +56,7 @@ public class PlayerControler : MonoBehaviour {
         float sqrtDistance = (planet.transform.position - this.rb.position).sqrMagnitude;
         Vector3 forceDir = (planet.transform.position - this.rb.position).normalized;
         Vector3 acceleration = forceDir * gravitationalConstant * planet.mass / sqrtDistance;
-        float dstToSurface = Mathf.Sqrt(sqrtDistance) - planet.planetScale;
+        float dstToSurface = Mathf.Sqrt(sqrtDistance) - planet.getScale();
 
         this.rb.AddForce(acceleration, ForceMode.Acceleration);
 
