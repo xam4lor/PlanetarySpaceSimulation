@@ -23,28 +23,20 @@ public class Body : MonoBehaviour {
         this.transform.RotateAround(this.transform.position, rotationAxis, rotationPulsation * Time.deltaTime);
     }
 
+    public void initialize(Vector3 position, Vector3 initialVelocity, int scale, float mass, Vector3 rotationAxis, float rotationPulsation) {
+        this.transform.position = position;
+        this.bodyScale = scale;
+        this.mass = mass;
+        this.rotationAxis = rotationAxis;
+        this.rotationPulsation = rotationPulsation;
+    }
+
 
 
 
     public float getScale() {
         return this.bodyScale;
     }
-
-    public struct PlayerLastStats {
-        public Vector3 playerPos;
-        public Vector3 collisionPos;
-        public float distance;
-        public int chunkID;
-        public string chunkName;
-
-        public PlayerLastStats(Vector3 playerPos, Vector3 collisionPos, float distance, int chunkID, string chunkName) {
-            this.playerPos = playerPos;
-            this.collisionPos = collisionPos;
-            this.distance = distance;
-            this.chunkID = chunkID;
-            this.chunkName = chunkName;
-        }
-    };
 
     public void onPlayerSeeChunk(object[] obj) {
         this.lastPlayerStats = new PlayerLastStats((Vector3)obj[0], (Vector3)obj[1], (float)obj[2], (int)obj[3], (string)obj[4]);

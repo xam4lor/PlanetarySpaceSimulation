@@ -14,7 +14,7 @@ public class PlayerControler : MonoBehaviour {
 
     [Header("Character data")]
     public float mass = 70f;
-	public Planet planet;
+	public Universe universe;
 	public float gravitationalConstant = 0.0001f;
     public Transform feetPosition;
 
@@ -52,14 +52,19 @@ public class PlayerControler : MonoBehaviour {
 
     // Calculate forces and rotation and Update acceleration
     private void updatePhysics() {
-		// Gravity
-        float sqrtDistance = (planet.transform.position - this.rb.position).sqrMagnitude;
-        Vector3 forceDir = (planet.transform.position - this.rb.position).normalized;
-        Vector3 acceleration = forceDir * gravitationalConstant * planet.mass / sqrtDistance;
-        float dstToSurface = Mathf.Sqrt(sqrtDistance) - planet.getScale();
+        Vector3 acceleration = new Vector3(0, 0, 0);
 
+        Body[] bodys = universe.getBodys();
+        for (int i = 0; i < bodys.Length; i++) {
+            // Gravity
+            float sqrtDistance = (bodys[i].transform.position - this.rb.position).sqrMagnitude;
+            Vector3 forceDir = (bodys[i].transform.position - this.rb.position).normalized;
+
+            acceleration += forceDir * gravitationalConstant * bodys[i].mass / sqrtDistance;
+        }
+
+        // Global acceleration
         this.rb.AddForce(acceleration, ForceMode.Acceleration);
-
         Vector3 gravityUp = -acceleration.normalized;
         this.rb.rotation = Quaternion.FromToRotation(transform.up, gravityUp) * this.rb.rotation;
     }

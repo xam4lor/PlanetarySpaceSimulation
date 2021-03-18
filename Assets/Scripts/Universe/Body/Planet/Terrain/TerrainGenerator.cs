@@ -7,13 +7,11 @@ public class TerrainGenerator {
     private float minHeight = 10000000000;
 
     private NoiseGenerator noiseGenerator;
-    private TerrainColorsSettings[] terrainColorsSettings;
     private Planet planet;
 
-    public TerrainGenerator(NoiseSettings[] settings, TerrainColorsSettings[] terrainColorsSettings, Planet planet) {
+    public TerrainGenerator(NoiseSettings[] settings, Planet planet) {
         this.noiseGenerator = new NoiseGenerator(settings);
         this.planet = planet;
-        this.terrainColorsSettings = terrainColorsSettings;
         this.maxHeight = planet.terrainHeight;
     }
 

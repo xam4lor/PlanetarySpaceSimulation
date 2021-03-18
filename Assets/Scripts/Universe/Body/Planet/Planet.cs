@@ -3,29 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Planet : Body {
-    [Header("Planet chunks")]
-	public bool useLOD = false;
-	public float[] threshold = new float[] {
-		2,    // threshold 0
-		1.5f, // threshold 1
-		1,    // threshold 2
-		0.7f, // threshold 3
-		0.5f,
-		0.1f,
-		0
-	};
-	public int chunkTargetLevel = 3;
-    public int chunkDensity = 10;
-	public int destroyIterationMaxCount = 10;
-
-
-
-	[Header("Terrain Configuration")]
-    public float terrainHeight = 10;
-	public float waterLevel = 5f;
+    public float terrainHeight;
+    public float waterLevel;
+    public int chunkDensity;
+    public bool useLOD;
+    public float[] threshold;
+    public int chunkTargetLevel;
+    public int destroyIterationMaxCount;
     public NoiseSettings[] noiseSettings;
-    private TerrainColorsSettings[] terrainColorsSettings;
-	public Gradient terrainGradient;
+    public Gradient terrainGradient;
 
 
 	[SerializeField, HideInInspector]
@@ -40,14 +26,6 @@ public class Planet : Body {
 
 	new private void OnEnable() {
 		base.OnEnable();
-
-		this.terrainGenerator = new TerrainGenerator(noiseSettings, terrainColorsSettings, this);
-		this.destroyGORef     = new Stack<GameObject>();
-		this.planetChunks     = new PlanetChunks[6];
-
-		this.generate();
-
-		StartCoroutine(PlanetGenerationLoop());
 	}
 
 	new private void Update() {
@@ -61,6 +39,31 @@ public class Planet : Body {
 
 
 
+	public void initialize(
+		Vector3 position, Vector3 initialVelocity, int scale, float mass, Vector3 rotationAxis, float rotationPulsation,
+		bool useLOD, float[] threshold, int chunkTargetLevel, int chunkDensity, int destroyIterationMaxCount,
+        float terrainHeight, float waterLevel, NoiseSettings[] noiseSettings, Gradient terrainGradient
+	) {
+		base.initialize(position, initialVelocity, scale, mass, rotationAxis, rotationPulsation);
+
+		this.useLOD = useLOD;
+		this.threshold = threshold;
+		this.chunkTargetLevel = chunkTargetLevel;
+		this.chunkDensity = chunkDensity;
+		this.destroyIterationMaxCount = destroyIterationMaxCount;
+		this.terrainHeight = terrainHeight;
+		this.waterLevel = waterLevel;
+		this.noiseSettings = noiseSettings;
+		this.terrainGradient = terrainGradient;
+
+        this.terrainGenerator = new TerrainGenerator(noiseSettings, this);
+        this.destroyGORef = new Stack<GameObject>();
+        this.planetChunks = new PlanetChunks[6];
+
+        this.generate();
+
+        StartCoroutine(PlanetGenerationLoop());
+	}
 
 	public void generate() {
 		// Initialize terrain generation

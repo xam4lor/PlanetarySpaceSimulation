@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour {
-	public GameObject planetChunks;
+	public Universe universe;
 
     private void Update() {
         Ray ray = new Ray(transform.position, transform.forward);
@@ -15,7 +15,10 @@ public class PlayerCamera : MonoBehaviour {
 				string chunkName = hitInfo.collider.name;
                 int chunkID = int.Parse(chunkName.Substring(0, 1));
 				
-                planetChunks.GetComponent<Planet>().SendMessage("onPlayerSeeChunk", new object[]{ transform.position, collisionPoint, hitInfo.distance, chunkID, chunkName });
+                universe
+                    .getNearestBody(transform.position)
+                    .SendMessage("onPlayerSeeChunk", new object[]{ transform.position, collisionPoint, hitInfo.distance, chunkID, chunkName })
+                ;
                 Debug.DrawLine(ray.origin, hitInfo.point, Color.green);
 			}
         }
