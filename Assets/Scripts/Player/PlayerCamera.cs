@@ -17,8 +17,7 @@ public class PlayerCamera : MonoBehaviour {
 				
                 universe
                     .getNearestBody(transform.position)
-                    .SendMessage("onPlayerSeeChunk", new object[]{ transform.position, collisionPoint, hitInfo.distance, chunkID, chunkName })
-                ;
+                    .SendMessage("onPlayerSeeChunk", new object[]{ transform.position, collisionPoint, hitInfo.distance, chunkID, chunkName });
                 Debug.DrawLine(ray.origin, hitInfo.point, Color.green);
 			}
         }

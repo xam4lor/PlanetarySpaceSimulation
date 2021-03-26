@@ -20,7 +20,7 @@ public class Body : MonoBehaviour {
 
     protected void Update() {
         // Units : km, kg
-        this.transform.RotateAround(this.transform.position, rotationAxis, rotationPulsation * Time.deltaTime);
+        this.transform.Rotate(rotationAxis.normalized, rotationPulsation * Time.deltaTime, Space.World);
     }
 
     public void initialize(Vector3 position, Vector3 initialVelocity, int scale, float mass, Vector3 rotationAxis, float rotationPulsation) {

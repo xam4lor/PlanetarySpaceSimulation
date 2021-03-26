@@ -77,13 +77,12 @@ public class Planet : Body {
 		chunksContainer = new GameObject("Planet Chunks");
 		chunksContainer.transform.parent = transform;
 
-
-		planetChunks[0] = new PlanetChunks(this, gameObject.transform.position, "upX", chunksContainer);
-		planetChunks[1] = new PlanetChunks(this, gameObject.transform.position, "downX", chunksContainer);
-		planetChunks[2] = new PlanetChunks(this, gameObject.transform.position, "upY", chunksContainer);
-		planetChunks[3] = new PlanetChunks(this, gameObject.transform.position, "downY", chunksContainer);
-		planetChunks[4] = new PlanetChunks(this, gameObject.transform.position, "upZ", chunksContainer);
-		planetChunks[5] = new PlanetChunks(this, gameObject.transform.position, "downZ", chunksContainer);
+		planetChunks[0] = new PlanetChunks(this, Vector3.zero, "upX", chunksContainer);
+		planetChunks[1] = new PlanetChunks(this, Vector3.zero, "downX", chunksContainer);
+		planetChunks[2] = new PlanetChunks(this, Vector3.zero, "upY", chunksContainer);
+		planetChunks[3] = new PlanetChunks(this, Vector3.zero, "downY", chunksContainer);
+		planetChunks[4] = new PlanetChunks(this, Vector3.zero, "upZ", chunksContainer);
+		planetChunks[5] = new PlanetChunks(this, Vector3.zero, "downZ", chunksContainer);
 	}
 
 	public float getAltitudeAt(Vector3 pos) {

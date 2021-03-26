@@ -352,7 +352,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832359461}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1802, y: 943, z: -89.40114}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -809,20 +809,32 @@ PrefabInstance:
       value: Moon
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].scale
+      value: 6300
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].scale
       value: 630
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
-      propertyPath: bodyPlanetList.Array.data[0].position.x
+      propertyPath: bodyPlanetList.Array.data[0].active
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[1].active
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].position.x
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].position.y
-      value: 0
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].position.z
-      value: 0
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].position.x
@@ -849,6 +861,18 @@ PrefabInstance:
       value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].rotationAxis.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].rotationAxis.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].rotationAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].rotationAxis.x
       value: -1.14
       objectReference: {fileID: 0}
@@ -863,6 +887,10 @@ PrefabInstance:
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].chunkTargetLevel
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].rotationPulsation
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].rotationPulsation

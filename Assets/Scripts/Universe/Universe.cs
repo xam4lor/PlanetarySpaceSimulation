@@ -21,6 +21,9 @@ public class Universe : MonoBehaviour {
         // Add planets to bodyList
         for (int i = 0; i < this.bodyPlanetList.Length; i++) {
             BodyTypePlanet t = this.bodyPlanetList[i];
+            if (!t.active)
+                continue;
+
             GameObject go = new GameObject(t.name);
 
             go.transform.parent = gameObject.transform;
@@ -54,6 +57,7 @@ public class Universe : MonoBehaviour {
     [System.Serializable]
     public class BodyType {
         [Header("Main parameters")]
+        public bool active;
         public string name;
 
         public Vector3 position = new Vector3(0, 0, 0);

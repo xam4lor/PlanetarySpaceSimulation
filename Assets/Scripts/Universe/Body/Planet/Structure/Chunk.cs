@@ -9,8 +9,8 @@ namespace QuadTree {
 		public int depth;
 
 		private Chunk parentChunk;
-		
-		private GameObject gameObject;
+
+        private GameObject gameObject;
 		private MeshFilter meshFilter;
 		private PlanetChunks handler;
 
@@ -75,7 +75,7 @@ namespace QuadTree {
 			// GameObject
 			GameObject chunkGo = new GameObject(this.name);
 			chunkGo.transform.parent = parentGo.transform;
-			chunkGo.transform.position = new Vector3(0, 0, 0);
+			chunkGo.transform.localPosition = Vector3.zero;
 			chunkGo.tag = "Chunk";
 
             // Renderer & Material
