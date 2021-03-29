@@ -3,7 +3,14 @@ using UnityEngine;
 using System.Collections;
 
 public class Universe : MonoBehaviour {
+    [Header("Body List")]
     public BodyTypePlanet[] bodyPlanetList;
+
+    [Header("Universe Configuration")]
+    public float simulationSpeed = 1;
+    public bool showBodyTrails = true;
+
+
 
     private ArrayList bodyListGo;
     private ArrayList bodyList;
@@ -29,7 +36,7 @@ public class Universe : MonoBehaviour {
             go.transform.parent = gameObject.transform;
             go.AddComponent<Planet>();
             go.GetComponent<Planet>().initialize(
-                t.position, t.initialVelocity, t.scale, t.mass, t.rotationAxis, t.rotationPulsation,
+                this, t.position, t.initialVelocity, t.scale, t.mass, t.rotationAxis, t.rotationPulsation,
                 t.useLOD, t.threshold, t.chunkTargetLevel, t.chunkDensity, t.destroyIterationMaxCount,
                 t.terrainHeight, t.waterLevel, t.noiseSettings, t.terrainGradient
             );
@@ -62,7 +69,7 @@ public class Universe : MonoBehaviour {
 
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 initialVelocity = new Vector3(0, 0, 0);
-        public int scale = 1000;
+        public float scale = 1000;
 
         public float mass = 1e8f;
         public Vector3 rotationAxis = new Vector3(0, 0, 0);

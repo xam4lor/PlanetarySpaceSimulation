@@ -40,11 +40,11 @@ public class Planet : Body {
 
 
 	public void initialize(
-		Vector3 position, Vector3 initialVelocity, int scale, float mass, Vector3 rotationAxis, float rotationPulsation,
+		Universe universe, Vector3 position, Vector3 initialVelocity, float scale, float mass, Vector3 rotationAxis, float rotationPulsation,
 		bool useLOD, float[] threshold, int chunkTargetLevel, int chunkDensity, int destroyIterationMaxCount,
         float terrainHeight, float waterLevel, NoiseSettings[] noiseSettings, Gradient terrainGradient
 	) {
-		base.initialize(position, initialVelocity, scale, mass, rotationAxis, rotationPulsation);
+		base.initialize(universe, position, initialVelocity, scale, mass, rotationAxis, rotationPulsation);
 
 		this.useLOD = useLOD;
 		this.threshold = threshold;
@@ -71,11 +71,15 @@ public class Planet : Body {
 
 		// Initialize planet chunks
 		foreach (Transform child in transform) {
-			GameObject.Destroy(child.gameObject);
+			string name = child.gameObject.name;
+
+			if (name == "Planet Chunks")
+				GameObject.Destroy(child.gameObject);
 		}
 
 		chunksContainer = new GameObject("Planet Chunks");
 		chunksContainer.transform.parent = transform;
+        chunksContainer.transform.localPosition = Vector3.zero;
 
 		planetChunks[0] = new PlanetChunks(this, Vector3.zero, "upX", chunksContainer);
 		planetChunks[1] = new PlanetChunks(this, Vector3.zero, "downX", chunksContainer);

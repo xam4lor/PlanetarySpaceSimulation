@@ -351,12 +351,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832359461}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 1407163208}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1022702222
 GameObject:
@@ -497,6 +497,38 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1428623308}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1407163207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1407163208}
+  m_Layer: 0
+  m_Name: Sun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1407163208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407163207}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 15990}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 832359463}
+  - {fileID: 2010979449}
+  m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1428623307
@@ -653,6 +685,101 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &2010979448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2010979449}
+  - component: {fileID: 2010979452}
+  - component: {fileID: 2010979451}
+  - component: {fileID: 2010979450}
+  m_Layer: 0
+  m_Name: Sun Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2010979449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010979448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 850, y: 850, z: 850}
+  m_Children: []
+  m_Father: {fileID: 1407163208}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2010979450
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010979448}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &2010979451
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010979448}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: bd5a354a06bc53f46951b2afefa84285, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2010979452
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010979448}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2023598906
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,14 +823,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023598906}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6710.7, z: 0}
+  m_LocalPosition: {x: 0, y: 1000, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 477209071}
   - {fileID: 1328889404}
   - {fileID: 1428623308}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2023598909
 MonoBehaviour:
@@ -717,6 +844,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0bd9a3621b87c4f8516dbff9444d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  freeMovement: 1
+  flySpeed: 800
+  flyRunSpeed: 5000
   walkSpeed: 8
   runSpeed: 14
   jumpForce: 15.5
@@ -727,6 +857,7 @@ MonoBehaviour:
   universe: {fileID: 393122476}
   gravitationalConstant: 0.66743
   feetPosition: {fileID: 1385466903}
+  mainCamera: {fileID: 477209070}
 --- !u!136 &2023598910
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -797,12 +928,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: showBodyTrails
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: simulationSpeed
+      value: 518400
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].mass
+      value: 5.972e+12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].mass
-      value: 1000000
+      value: 7.342e+10
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].name
@@ -810,11 +953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].scale
-      value: 6300
+      value: 127.42
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].scale
-      value: 630
+      value: 34.74
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].active
@@ -822,31 +965,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].active
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].position.x
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].position.y
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].position.z
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].position.x
-      value: 10000
+      value: 2883.742
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].position.y
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].position.z
-      value: 10000
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].waterLevel
@@ -890,11 +1033,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[0].rotationPulsation
-      value: 0
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[1].initialVelocity.z
+      value: 0.0003
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].rotationPulsation
-      value: 1.08
+      value: 0.00005
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].threshold.Array.size
@@ -1083,6 +1230,10 @@ PrefabInstance:
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].noiseSettings.Array.data[1].octaves
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
+      propertyPath: bodyPlanetList.Array.data[0].noiseSettings.Array.data[1].strength
+      value: 0.77
       objectReference: {fileID: 0}
     - target: {fileID: 3802209971155443980, guid: e6a0d2e2a273c5b4b8578a518cafa1b7, type: 3}
       propertyPath: bodyPlanetList.Array.data[1].noiseSettings.Array.data[0].minValue

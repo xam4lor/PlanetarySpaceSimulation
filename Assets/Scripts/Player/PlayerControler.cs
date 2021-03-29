@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour {
+    [Header("Movement type")]
+    public bool freeMovement = false;
+    public float flySpeed = 800f;
+    public float flyRunSpeed = 5000f;
+
+
     [Header("Movement settings")]
     public float walkSpeed = 8f;
     public float runSpeed = 14f;
@@ -17,6 +23,7 @@ public class PlayerControler : MonoBehaviour {
 	public Universe universe;
 	public float gravitationalConstant = 0.0001f;
     public Transform feetPosition;
+    public Camera mainCamera;
 
 	private Rigidbody rb;
 	private Vector3 velocity;
@@ -37,13 +44,17 @@ public class PlayerControler : MonoBehaviour {
 
 
     private void Update() {
-        HandleMovement();
+        if (!freeMovement)
+            HandleNormalMovement();
+        else
+            HandleFreeMovement();
     }
 
 
 
 	private void FixedUpdate() {
-		this.updatePhysics();
+        if (!freeMovement)
+		    this.updatePhysics();
 
         // Move
         this.rb.MovePosition(this.rb.position + velocity * Time.fixedDeltaTime);
@@ -72,7 +83,18 @@ public class PlayerControler : MonoBehaviour {
 
 
 
-    private void HandleMovement() {
+    private void HandleFreeMovement() {
+        bool running = Input.GetKey(KeyCode.LeftShift);
+        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector3 targetVelocity = mainCamera.transform.right * input.x + mainCamera.transform.forward * input.z;
+
+        targetVelocity *= (running) ? flyRunSpeed : flySpeed;
+
+        velocity = Vector3.SmoothDamp(velocity, targetVelocity, ref smoothVRef, airSmoothTime);
+    }
+
+
+    private void HandleNormalMovement() {
         if (Time.timeScale == 0) {
             return;
         }
